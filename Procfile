@@ -1,1 +1,1 @@
-web: gunicorn newagrimo.wsgi --log-file -
+web: gunicorn wroplatform.wsgi --log-file -
