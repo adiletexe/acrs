@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Marker</title>
+
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .custom-popup {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .green-dot {
+            background-color: green;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <button id="choose-point-button">Choose Point</button>
+    <button id="confirm-button" disabled>Confirm</button>
+
+    <!-- leaflet js  -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var map = L.map('map').setView([43.2380, 76.8829], 2);
+
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        osm.addTo(map);
+
+        var greenIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        var blueIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+            iconSize: [20, 21],
+            iconAnchor: [5, 21],
+            popupAnchor: [1, -34],
+        });
+        
+        var greenDot = L.circleMarker([0, 0], {
+            radius: 5,
+            color: 'green',
+            fillColor: 'green',
+            fillOpacity: 1,
+        });
+
+        var chosenLatLng = null;
+        var confirmButton = document.getElementById('confirm-button');
+        var choosePointButton = document.getElementById('choose-point-button');
+        var mapClickEnabled = false;
+
+        choosePointButton.addEventListener('click', function () {
+            confirmButton.disabled = false;
+            choosePointButton.disabled = true; 
+            mapClickEnabled = true;
+        });
+
+        confirmButton.addEventListener('click', function () {
+            if (chosenLatLng) {
+                if (chosenLatLng.lat >= -61.706545 && chosenLatLng.lat <= -42.189464 && chosenLatLng.lng >= -59.676189 && chosenLatLng.lng <= 94.573910) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/add_position/',
+                        data: JSON.stringify({
+                            'latitude': chosenLatLng.lat,
+                            'longitude': chosenLatLng.lng,
+                            'currentname': 'westwinddrift'
+                        }),
+                        success: function (response) {
+                            alert(response.message);
+                            chosenLatLng = null;
+                            confirmButton.disabled = true;
+                            choosePointButton.disabled = false;
+                        },
+                        error: function (error) {
+                            alert('Error updating position: ' + error.responseText);
+                        },
+                    });
+                } else if (chosenLatLng.lat >= 45 && chosenLatLng.lat <= 55 && chosenLatLng.lng >= -163 && chosenLatLng.lng <= -143) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/add_position/',
+                        data: JSON.stringify({
+                            'latitude': chosenLatLng.lat,
+                            'longitude': chosenLatLng.lng,
+                            'currentname': 'northpacific'
+                        }),
+                        success: function (response) {
+                            alert(response.message);
+                            chosenLatLng = null;
+                            confirmButton.disabled = true;
+                            choosePointButton.disabled = false;
+                        },
+                        error: function (error) {
+                            alert('Error updating position: ' + error.responseText);
+                        },
+                    });
+                } else if (chosenLatLng.lat >= 30.414212 && chosenLatLng.lat <= 41.059467 && chosenLatLng.lng >= -25.963625 && chosenLatLng.lng <= -11.188141) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/add_position/',
+                        data: JSON.stringify({
+                            'latitude': chosenLatLng.lat,
+                            'longitude': chosenLatLng.lng,
+                            'currentname': 'canaries'
+                        }),
+                        success: function (response) {
+                            alert(response.message);
+                            chosenLatLng = null;
+                            confirmButton.disabled = true;
+                            choosePointButton.disabled = false;
+                        },
+                        error: function (error) {
+                            alert('Error updating position: ' + error.responseText);
+                        },
+                    });
+                } else if (chosenLatLng.lat >= 1.318247 && chosenLatLng.lat <= 15.876813 && chosenLatLng.lng >= -53.321357 && chosenLatLng.lng <= -28.696254) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/add_position/',
+                        data: JSON.stringify({
+                            'latitude': chosenLatLng.lat,
+                            'longitude': chosenLatLng.lng,
+                            'currentname': 'gulfstream'
+                        }),
+                        success: function (response) {
+                            alert(response.message);
+                            chosenLatLng = null;
+                            confirmButton.disabled = true;
+                            choosePointButton.disabled = false;
+                        },
+                        error: function (error) {
+                            alert('Error updating position: ' + error.responseText);
+                        },
+                    });
+                } else {
+                    alert('There is no current yet. Your range: Latitude=' + chosenLatLng.lat + ', Longitude=' + chosenLatLng.lng);
+                }
+            } else {
+                alert('Please choose a point on the map.');
+            }
+            mapClickEnabled = false;
+        });
+        
+        function updatePositionsInterval(greenIcon, map) {
+        var markers = [];
+        var dots = [];
+
+        setInterval(function () {
+            markers.forEach(function(marker) {
+                map.removeLayer(marker);
+            });
+            markers = [];
+
+            $.get('/get_positions/', function(data) {
+                if (data.positions && data.positions.length > 0) {
+                    data.positions.forEach(function(position) {
+                        if (position.steps_left >= 20 && position.currentname == 'northpacific') {
+                            var latLng = { lat: position.latitude+0.3, lng: position.longitude+1 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_northpacific/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        } else if (position.steps_left >= 0 && position.currentname == 'northpacific') {
+                            var latLng = { lat: position.latitude-1, lng: position.longitude+0.5 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_californian/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        }
+                        else if (position.steps_left >= 0 && position.currentname == 'westwinddrift') {
+                            var latLng = { lat: position.latitude, lng: position.longitude+1 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_westwinddrift/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        }
+                        else if (position.steps_left >= 20 && position.currentname == 'canaries') {
+                            var latLng = { lat: position.latitude-0.5, lng: position.longitude-1 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_canaries/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        } else if (position.steps_left >= 1 && position.currentname == 'gulfstream') {
+                            var latLng = { lat: position.latitude+0.6, lng: position.longitude-1 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_gulfstream/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        } 
+                        else if (position.steps_left <= 20 && position.currentname == 'canaries') {
+                            var latLng = { lat: position.latitude+0.6, lng: position.longitude-1 };
+                            $.ajax({
+                                type: 'GET',
+                                url: '/update_positions_gulfstream/',
+                                data: {position_id:position.id},
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (error) {
+                                    console.log('Error updating positions: ' + error.responseText);
+                                },
+                            });
+                        } 
+                        else {
+                            var latLng = { lat: position.latitude, lng: position.longitude };
+                        }
+                        var marker = L.marker(latLng, { icon: greenIcon }).addTo(map);
+                        var dot = L.marker(latLng, { icon: 
+                            L.divIcon({
+                                classname: 'green-dot',
+                                iconSize: [5, 5]
+                            }) }).addTo(map);
+                        markers.push(marker);
+                        dots.push(dot);
+                        
+                    });
+                }
+            });
+
+            // if (chosenLatLng) {
+            //     chosenLatLng.lat += 1;
+            //     chosenLatLng.lng += 0.5;
+            // }
+
+            // $.ajax({
+            //     type: 'GET',
+            //     url: '/update_positions/',
+            //     success: function (response) {
+            //         console.log(response.message);
+            //     },
+            //     error: function (error) {
+            //         console.log('Error updating positions: ' + error.responseText);
+            //     },
+            // });
+        }, 500);
+        }
+
+        updatePositionsInterval(greenIcon, map)
+
+        map.on('click', function (e) {
+            if (mapClickEnabled && !chosenLatLng) {
+                chosenLatLng = { lat: e.latlng.lat, lng: e.latlng.lng };
+                L.marker(e.latlng, { icon: greenIcon }).addTo(map);
+            }
+        });
+
+        // function getPositions(greenIcon, map) {
+        //     setInterval(function () {
+        //         $.ajax({
+        //             type: 'GET',
+        //             url: '/get_positions/',
+        //             success: function (response) {
+        //                 var positions = response.positions;
+        //                 positions.forEach(function (position) {
+        //                     var positionMarker = L.marker([position.latitude, position.longitude], { icon: greenIcon }).addTo(map);
+        //                     positionMarker.bindPopup('<div class="custom-popup">Position: ' + position.latitude + ', ' + position.longitude + '</div>');
+        //                 });
+        //             },
+        //             error: function (error) {
+        //                 console.log('Error retrieving positions: ' + error.responseText);
+        //             },
+        //         });
+        //     }, 3000);
+        // }
+
+        // getPositions(greenIcon, map)
+    </script>
+</body>
+
+</html>
