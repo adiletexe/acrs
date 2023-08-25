@@ -1,4 +1,4 @@
-
+{% load_static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +80,14 @@
         var confirmButton = document.getElementById('confirm-button');
         var choosePointButton = document.getElementById('choose-point-button');
         var mapClickEnabled = false;
-
+        {% for trash in trashes %}
+            var circle = L.circle([{{trash.lat}}, {{trash.long}}], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 50000
+            }).addTo(map);
+        {% endfor %}
         choosePointButton.addEventListener('click', function () {
             confirmButton.disabled = false;
             choosePointButton.disabled = true; 
