@@ -13,3 +13,7 @@ class Position(models.Model):
     longitude = models.FloatField()
     steps_left = models.IntegerField(blank=True)
     currentname = models.CharField(max_length=100, blank=True)
+
+class Trash(models.Model):
+    lat = models.FloatField()
+    long = models.FloatField()

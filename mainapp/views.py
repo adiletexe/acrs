@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Containers, Position
+from .models import Containers, Position, Trash
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,8 +15,15 @@ def index(request):
     return render(request, 'index.html', {'containers':containers})
 
 def map(request):
-    positions = Position.objects.all()    
-    context = {'positions': positions}
+    positions = Position.objects.all()
+    containers = Containers.objects.all() 
+    trashes = Trash.objects.all()   
+    context = {'positions': positions, 'containers': containers, 'trashes': trashes}
+    if request.method == "POST":
+        lat = request.POST['chosen_lat']
+        long = request.POST['chosen_lng']
+        Trash.objects.create(lat=lat, long=long)
+        return render(request, 'map.html', context)
     return render(request, 'map.html', context)
 
 def get_positions(request):
